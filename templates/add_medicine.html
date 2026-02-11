@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="card shadow p-4">
+    <h3 class="mb-3">Add Medicine</h3>
+
+    <form method="POST">
+        <div class="mb-3">
+            <label>Medicine Name</label>
+            <input type="text" name="name" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Dosage</label>
+            <input type="text" name="dosage" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>Time</label>
+            <select name="time" class="form-select">
+                <option>Morning</option>
+                <option>Afternoon</option>
+                <option>Night</option>
+            </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Start Date</label>
+            <input type="date" name="start" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+            <label>End Date</label>
+            <input type="date" name="end" class="form-control" required>
+        </div>
+
+        <button class="btn btn-primary">Add Medicine</button>
+    </form>
+</div>
+
+{% endblock %}
