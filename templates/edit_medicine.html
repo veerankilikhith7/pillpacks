@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Edit Medicine</h3>
+
+<div class="card shadow p-4">
+
+    <form method="POST">
+
+        <div class="mb-3">
+            <label>Medicine Name</label>
+            <input type="text"
+                   name="name"
+                   value="{{ medicine[2] }}"
+                   class="form-control"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label>Dosage</label>
+            <input type="text"
+                   name="dosage"
+                   value="{{ medicine[3] }}"
+                   class="form-control"
+                   required>
+        </div>
+
+        <div class="mb-3">
+            <label>Time</label>
+            <select name="time" class="form-select">
+
+                <option {% if medicine[4]=='Morning' %}selected{% endif %}>
+                    Morning
+                </option>
+
+                <option {% if medicine[4]=='Afternoon' %}selected{% endif %}>
+                    Afternoon
+                </option>
+
+                <option {% if medicine[4]=='Night' %}selected{% endif %}>
+                    Night
+                </option>
+
+            </select>
+        </div>
+
+        <button class="btn btn-primary">Update Medicine</button>
+
+    </form>
+
+</div>
+
+{% endblock %}

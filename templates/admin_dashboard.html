@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">⚙ Admin Dashboard</h2>
+
+<div class="row">
+<!-- Statistics Cards -->
+<div class="row mb-4">
+
+    <div class="col-md-6">
+        <div class="card shadow text-center bg-primary text-white">
+            <div class="card-body">
+                <h5>Total Users</h5>
+                <h2>{{ total_users }}</h2>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card shadow text-center bg-success text-white">
+            <div class="card-body">
+                <h5>Total Medicines</h5>
+                <h2>{{ total_medicines }}</h2>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+    <!-- USERS SECTION -->
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white">
+                👤 All Users
+            </div>
+            <div class="card-body">
+
+    <!-- Search Form -->
+    <form method="GET" class="mb-3">
+        <div class="input-group">
+            <input type="text"
+                   name="search"
+                   class="form-control"
+                   placeholder="Search user by username...">
+
+            <button class="btn btn-outline-primary">
+                Search
+            </button>
+        </div>
+    </form>
+
+    <table class="table table-bordered">
+
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Username</th>
+            <th>Role</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for user in users %}
+        <tr>
+            <td>{{ user[0] }}</td>
+            <td>{{ user[1] }}</td>
+            <td>
+                {% if user[2] == 1 %}
+                    <span class="badge bg-success">Admin</span>
+                {% else %}
+                    <span class="badge bg-secondary">User</span>
+                {% endif %}
+            </td>
+            <td>
+                {% if user[2] != 1 %}
+                    <a href="/delete_user/{{ user[0] }}"
+                       class="btn btn-danger btn-sm"
+                       onclick="return confirm('Are you sure?')">
+                       Delete
+                    </a>
+                {% else %}
+                    -
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+            </div>
+        </div>
+    </div>
+
+    <!-- MEDICINES SECTION -->
+    <div class="col-md-6">
+        <div class="card shadow">
+            <div class="card-header bg-primary text-white">
+                💊 All Medicines
+            </div>
+            <div class="card-body">
+
+                <table class="table table-bordered table-sm">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>User ID</th>
+                            <th>Name</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for med in medicines %}
+                        <tr>
+                            <td>{{ med[0] }}</td>
+                            <td>{{ med[1] }}</td>
+                            <td>{{ med[2] }}</td>
+                            <td>{{ med[4] }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}

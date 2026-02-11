@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h3 class="mb-4">Today's Pill Schedule</h3>
+
+<div class="mb-3">
+    <a href="/generate_pdf" class="btn btn-success">
+        Download Printable Pill Schedule
+    </a>
+</div>
+
+<div class="row">
+
+    <!-- Morning -->
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-warning text-dark text-center">
+                🌅 Morning
+            </div>
+            <div class="card-body">
+                {% if morning %}
+                    {% for med in morning %}
+                        <div class="mb-3">
+                            <strong>{{ med[2] }}</strong><br>
+                            <small class="text-muted">{{ med[3] }}</small>
+                            <br>
+
+                            <a href="/edit_medicine/{{ med[0] }}"
+                               class="btn btn-warning btn-sm mt-2">
+                               Edit
+                            </a>
+
+                            <a href="/delete/{{ med[0] }}"
+                               class="btn btn-danger btn-sm mt-2"
+                               onclick="return confirm('Are you sure you want to delete this medicine?')">
+                               Delete
+                            </a>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No medicines</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Afternoon -->
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-info text-dark text-center">
+                🌞 Afternoon
+            </div>
+            <div class="card-body">
+                {% if afternoon %}
+                    {% for med in afternoon %}
+                        <div class="mb-3">
+                            <strong>{{ med[2] }}</strong><br>
+                            <small class="text-muted">{{ med[3] }}</small>
+                            <br>
+
+                            <a href="/edit_medicine/{{ med[0] }}"
+                               class="btn btn-warning btn-sm mt-2">
+                               Edit
+                            </a>
+
+                            <a href="/delete/{{ med[0] }}"
+                               class="btn btn-danger btn-sm mt-2"
+                               onclick="return confirm('Are you sure you want to delete this medicine?')">
+                               Delete
+                            </a>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No medicines</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Night -->
+    <div class="col-md-4">
+        <div class="card shadow">
+            <div class="card-header bg-dark text-white text-center">
+                🌙 Night
+            </div>
+            <div class="card-body">
+                {% if night %}
+                    {% for med in night %}
+                        <div class="mb-3">
+                            <strong>{{ med[2] }}</strong><br>
+                            <small class="text-muted">{{ med[3] }}</small>
+                            <br>
+
+                            <a href="/edit_medicine/{{ med[0] }}"
+                               class="btn btn-warning btn-sm mt-2">
+                               Edit
+                            </a>
+
+                            <a href="/delete/{{ med[0] }}"
+                               class="btn btn-danger btn-sm mt-2"
+                               onclick="return confirm('Are you sure you want to delete this medicine?')">
+                               Delete
+                            </a>
+                        </div>
+                        <hr>
+                    {% endfor %}
+                {% else %}
+                    <p class="text-muted">No medicines</p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+</div>
+
+{% endblock %}
