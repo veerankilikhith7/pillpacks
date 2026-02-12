@@ -67,11 +67,22 @@ def register():
         cur = conn.cursor()
 
         try:
+            # Insert user as normal user first
             cur.execute(
-                "INSERT INTO users (username, password) VALUES (?, ?)",
+                "INSERT INTO users (username, password, is_admin) VALUES (?, ?, 0)",
                 (username, hashed_password)
             )
             conn.commit()
+
+            # Check total users
+            cur.execute("SELECT COUNT(*) FROM users")
+            total_users = cur.fetchone()[0]
+
+            # If first user → make admin
+            if total_users == 1:
+                cur.execute("UPDATE users SET is_admin=1 WHERE id=1")
+                conn.commit()
+
         except:
             conn.close()
             return "Username already exists!"
@@ -80,6 +91,7 @@ def register():
         return redirect(url_for('login'))
 
     return render_template('register.html')
+
 
 
 # ---------------- LOGIN ----------------
@@ -391,3 +403,4 @@ def edit_medicine(med_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
