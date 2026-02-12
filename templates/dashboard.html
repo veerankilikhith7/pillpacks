@@ -22,7 +22,10 @@
                     {% for med in morning %}
                         <div class="mb-3">
                             <strong>{{ med[2] }}</strong><br>
-                            <small class="text-muted">{{ med[3] }}</small>
+                            <small class="text-muted">
+    			    	{{ med[3] }} • {{ med[5] }}
+			    </small>
+
                             <br>
 
                             <a href="/edit_medicine/{{ med[0] }}"
@@ -46,7 +49,7 @@
     </div>
 
     <!-- Afternoon -->
-    <div class="col-md-4">
+    <div class="col-12 col-md-4">
         <div class="card shadow">
             <div class="card-header bg-info text-dark text-center">
                 🌞 Afternoon
@@ -56,7 +59,10 @@
                     {% for med in afternoon %}
                         <div class="mb-3">
                             <strong>{{ med[2] }}</strong><br>
-                            <small class="text-muted">{{ med[3] }}</small>
+                            <small class="text-muted">
+    			    	{{ med[3] }} • {{ med[5] }}
+			    </small>
+
                             <br>
 
                             <a href="/edit_medicine/{{ med[0] }}"
@@ -80,7 +86,7 @@
     </div>
 
     <!-- Night -->
-    <div class="col-md-4">
+    <div class="col-12 col-md-4">
         <div class="card shadow">
             <div class="card-header bg-dark text-white text-center">
                 🌙 Night
@@ -90,7 +96,10 @@
                     {% for med in night %}
                         <div class="mb-3">
                             <strong>{{ med[2] }}</strong><br>
-                            <small class="text-muted">{{ med[3] }}</small>
+                            <small class="text-muted">
+    			    	{{ med[3] }} • {{ med[5] }}
+			    </small>
+
                             <br>
 
                             <a href="/edit_medicine/{{ med[0] }}"
