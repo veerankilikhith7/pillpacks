@@ -5,48 +5,41 @@
 
 <div class="card shadow p-4">
 
-    <form method="POST">
+<form method="POST">
 
-        <div class="mb-3">
-            <label>Medicine Name</label>
-            <input type="text"
-                   name="name"
-                   value="{{ medicine[2] }}"
-                   class="form-control"
-                   required>
-        </div>
+    <div class="mb-3">
+        <label>Medicine Name</label>
+        <input type="text" name="name"
+               value="{{ medicine[2] }}"
+               class="form-control" required>
+    </div>
 
-        <div class="mb-3">
-            <label>Dosage</label>
-            <input type="text"
-                   name="dosage"
-                   value="{{ medicine[3] }}"
-                   class="form-control"
-                   required>
-        </div>
+    <div class="mb-3">
+        <label>Dosage</label>
+        <input type="text" name="dosage"
+               value="{{ medicine[3] }}"
+               class="form-control" required>
+    </div>
 
-        <div class="mb-3">
-            <label>Time</label>
-            <select name="time" class="form-select">
+    <div class="mb-3">
+        <label>Time Period</label>
+        <select name="time_period" class="form-select">
+            <option {% if medicine[4]=='Morning' %}selected{% endif %}>Morning</option>
+            <option {% if medicine[4]=='Afternoon' %}selected{% endif %}>Afternoon</option>
+            <option {% if medicine[4]=='Night' %}selected{% endif %}>Night</option>
+        </select>
+    </div>
 
-                <option {% if medicine[4]=='Morning' %}selected{% endif %}>
-                    Morning
-                </option>
+    <div class="mb-3">
+        <label>Exact Time</label>
+        <input type="time" name="exact_time"
+               value="{{ medicine[5] }}"
+               class="form-control" required>
+    </div>
 
-                <option {% if medicine[4]=='Afternoon' %}selected{% endif %}>
-                    Afternoon
-                </option>
+    <button class="btn btn-primary">Update</button>
 
-                <option {% if medicine[4]=='Night' %}selected{% endif %}>
-                    Night
-                </option>
-
-            </select>
-        </div>
-
-        <button class="btn btn-primary">Update Medicine</button>
-
-    </form>
+</form>
 
 </div>
 
