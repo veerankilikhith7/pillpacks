@@ -30,16 +30,18 @@ def init_db():
     ''')
 
     cur.execute('''
-        CREATE TABLE IF NOT EXISTS medicines (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER,
-            name TEXT,
-            dosage TEXT,
-            time TEXT,
-            start_date TEXT,
-            end_date TEXT
-        )
-    ''')
+    CREATE TABLE IF NOT EXISTS medicines (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        user_id INTEGER,
+        name TEXT,
+        dosage TEXT,
+        time_period TEXT,
+        exact_time TEXT,
+        start_date TEXT,
+        end_date TEXT
+    )
+''')
+
 
     conn.commit()
     conn.close()
@@ -135,6 +137,7 @@ def logout():
 
 @app.route('/dashboard')
 def dashboard():
+
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
@@ -144,13 +147,27 @@ def dashboard():
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
 
-    cur.execute('''
+    cur.execute("""
         SELECT * FROM medicines
         WHERE user_id=? AND start_date<=? AND end_date>=?
-    ''', (user_id, today, today))
+    """, (user_id, today, today))
 
     medicines = cur.fetchall()
     conn.close()
+
+    # Convert 24hr to 12hr
+    converted = []
+    for med in medicines:
+        time_24 = med[5]
+        time_obj = datetime.strptime(time_24, "%H:%M")
+        time_12 = time_obj.strftime("%I:%M %p")
+
+        med_list = list(med)
+        med_list[5] = time_12
+
+        converted.append(tuple(med_list))
+
+    medicines = converted
 
     # Group medicines
     morning = []
@@ -263,23 +280,34 @@ def delete_medicine_admin(med_id):
 
 @app.route('/add_medicine', methods=['GET', 'POST'])
 def add_medicine():
+
     if 'user_id' not in session:
         return redirect(url_for('login'))
 
     if request.method == 'POST':
         name = request.form['name']
         dosage = request.form['dosage']
-        time = request.form['time']
-        start = request.form['start']
-        end = request.form['end']
+        time_period = request.form['time_period']
+        exact_time = request.form['exact_time']
+        start_date = request.form['start']
+        end_date = request.form['end']
 
         conn = sqlite3.connect('database.db')
         cur = conn.cursor()
 
         cur.execute('''
-            INSERT INTO medicines (user_id, name, dosage, time, start_date, end_date)
-            VALUES (?, ?, ?, ?, ?, ?)
-        ''', (session['user_id'], name, dosage, time, start, end))
+            INSERT INTO medicines 
+            (user_id, name, dosage, time_period, exact_time, start_date, end_date)
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        ''', (
+            session['user_id'],
+            name,
+            dosage,
+            time_period,
+            exact_time,
+            start_date,
+            end_date
+        ))
 
         conn.commit()
         conn.close()
@@ -287,6 +315,7 @@ def add_medicine():
         return redirect(url_for('dashboard'))
 
     return render_template('add_medicine.html')
+
 
 # ---------------- DELETE MEDICINE ----------------
 
@@ -372,24 +401,23 @@ def edit_medicine(med_id):
     conn = sqlite3.connect('database.db')
     cur = conn.cursor()
 
-    # If form submitted → update medicine
     if request.method == 'POST':
         name = request.form['name']
         dosage = request.form['dosage']
-        time = request.form['time']
+        time_period = request.form['time_period']
+        exact_time = request.form['exact_time']
 
         cur.execute("""
             UPDATE medicines
-            SET name=?, dosage=?, time=?
+            SET name=?, dosage=?, time_period=?, exact_time=?
             WHERE id=?
-        """, (name, dosage, time, med_id))
+        """, (name, dosage, time_period, exact_time, med_id))
 
         conn.commit()
         conn.close()
 
         return redirect(url_for('dashboard'))
 
-    # If GET request → load medicine data
     cur.execute("SELECT * FROM medicines WHERE id=?", (med_id,))
     medicine = cur.fetchone()
     conn.close()
@@ -398,9 +426,7 @@ def edit_medicine(med_id):
 
 
 
-
 # ---------------- RUN ----------------
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
-
