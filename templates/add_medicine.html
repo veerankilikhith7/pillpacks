@@ -5,6 +5,7 @@
     <h3 class="mb-3">Add Medicine</h3>
 
     <form method="POST">
+
         <div class="mb-3">
             <label>Medicine Name</label>
             <input type="text" name="name" class="form-control" required>
@@ -16,12 +17,17 @@
         </div>
 
         <div class="mb-3">
-            <label>Time</label>
-            <select name="time" class="form-select">
+            <label>Time Period</label>
+            <select name="time_period" class="form-select">
                 <option>Morning</option>
                 <option>Afternoon</option>
                 <option>Night</option>
             </select>
+        </div>
+
+        <div class="mb-3">
+            <label>Exact Time</label>
+            <input type="time" name="exact_time" class="form-control" required>
         </div>
 
         <div class="mb-3">
@@ -35,6 +41,7 @@
         </div>
 
         <button class="btn btn-primary">Add Medicine</button>
+
     </form>
 </div>
 
