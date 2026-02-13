@@ -195,14 +195,23 @@ def admin_dashboard():
     if 'user_id' not in session or session.get('is_admin') != 1:
         return redirect(url_for('login'))
 
+    search_query = request.args.get('search')
+
     conn = get_db_connection()
     cur = conn.cursor()
 
-    # Get all users
-    cur.execute("SELECT id, username, is_admin FROM users ORDER BY id ASC")
+    # 🔍 SEARCH LOGIC
+    if search_query:
+        cur.execute(
+            "SELECT id, username, is_admin FROM users WHERE username ILIKE %s ORDER BY id ASC",
+            ('%' + search_query + '%',)
+        )
+    else:
+        cur.execute("SELECT id, username, is_admin FROM users ORDER BY id ASC")
+
     users = cur.fetchall()
 
-    # Get all medicines
+    # Medicines
     cur.execute("SELECT * FROM medicines ORDER BY id ASC")
     medicines = cur.fetchall()
 
@@ -218,6 +227,7 @@ def admin_dashboard():
         total_users=total_users,
         total_medicines=total_medicines
     )
+
 # ---------------- DELETE USER ----------------
 
 @app.route('/delete_user/<int:user_id>')
@@ -389,5 +399,6 @@ def generate_pdf():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
 
 
