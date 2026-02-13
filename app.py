@@ -186,7 +186,57 @@ def dashboard():
         afternoon=afternoon,
         night=night
     )
+    
+# ---------------- ADMIN DASHBOARD ----------------
 
+@app.route('/admin_dashboard')
+def admin_dashboard():
+
+    if 'user_id' not in session or session.get('is_admin') != 1:
+        return redirect(url_for('login'))
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Get all users
+    cur.execute("SELECT id, username, is_admin FROM users ORDER BY id ASC")
+    users = cur.fetchall()
+
+    # Get all medicines
+    cur.execute("SELECT * FROM medicines ORDER BY id ASC")
+    medicines = cur.fetchall()
+
+    total_users = len(users)
+    total_medicines = len(medicines)
+
+    conn.close()
+
+    return render_template(
+        'admin_dashboard.html',
+        users=users,
+        medicines=medicines,
+        total_users=total_users,
+        total_medicines=total_medicines
+    )
+# ---------------- DELETE USER ----------------
+
+@app.route('/delete_user/<int:user_id>')
+def delete_user(user_id):
+
+    if 'user_id' not in session or session.get('is_admin') != 1:
+        return redirect(url_for('login'))
+
+    if user_id == session['user_id']:
+        return "You cannot delete your own admin account!"
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
+    conn.commit()
+    conn.close()
+
+    return redirect(url_for('admin_dashboard'))
 
 # ---------------- ADD MEDICINE ----------------
 
@@ -277,3 +327,4 @@ def edit_medicine(med_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
