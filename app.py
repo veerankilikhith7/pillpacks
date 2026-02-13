@@ -51,11 +51,6 @@ def init_db():
     conn.commit()
     cur.close()
     conn.close()
-
-
-init_db()
-
-
 # ---------------- HOME ----------------
 
 @app.route('/')
@@ -399,6 +394,7 @@ def generate_pdf():
 if __name__ == '__main__':
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
+
 
 
 
