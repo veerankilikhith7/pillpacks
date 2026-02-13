@@ -6,11 +6,17 @@ from reportlab.lib.units import inch
 from reportlab.lib.pagesizes import A4
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask import Flask, render_template, request, redirect, url_for, session, send_file
-import sqlite3
 from datetime import datetime
+import psycopg2
+import os
 
 app = Flask(__name__)
 app.secret_key = "pillpack_secret_key"
+def get_db_connection():
+    database_url = os.environ.get("DATABASE_URL")
+    conn = psycopg2.connect(database_url)
+    return conn
+
 
 # ---------------- DATABASE INIT ----------------
 
@@ -430,3 +436,4 @@ def edit_medicine(med_id):
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
