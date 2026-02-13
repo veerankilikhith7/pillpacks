@@ -321,10 +321,72 @@ def edit_medicine(med_id):
     conn.close()
 
     return render_template('edit_medicine.html', medicine=medicine)
+# ---------------- GENERATE PDF ----------------
 
+@app.route('/generate_pdf')
+def generate_pdf():
+    if 'user_id' not in session:
+        return redirect(url_for('login'))
 
+    user_id = session['user_id']
+    today = datetime.today().strftime('%Y-%m-%d')
+
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT * FROM medicines
+        WHERE user_id=%s AND start_date<=%s AND end_date>=%s
+    """, (user_id, today, today))
+
+    medicines = cur.fetchall()
+    conn.close()
+
+    file_path = "pill_schedule.pdf"
+    doc = SimpleDocTemplate(file_path, pagesize=A4)
+    elements = []
+    styles = getSampleStyleSheet()
+
+    elements.append(Paragraph("<b>SMART PILL PACK - TODAY'S SCHEDULE</b>", styles['Title']))
+    elements.append(Spacer(1, 0.5 * inch))
+
+    morning, afternoon, night = [], [], []
+
+    for med in medicines:
+        if med[4] == "Morning":
+            morning.append(med)
+        elif med[4] == "Afternoon":
+            afternoon.append(med)
+        elif med[4] == "Night":
+            night.append(med)
+
+    def add_section(title, med_list):
+        elements.append(Paragraph(f"<b>{title}</b>", styles['Heading2']))
+        elements.append(Spacer(1, 0.2 * inch))
+
+        if med_list:
+            for med in med_list:
+                elements.append(
+                    Paragraph(f"- {med[2]} ({med[3]}) at {med[5]}", styles['Normal'])
+                )
+                elements.append(Spacer(1, 0.1 * inch))
+        else:
+            elements.append(Paragraph("No medicines", styles['Normal']))
+            elements.append(Spacer(1, 0.2 * inch))
+
+        elements.append(Spacer(1, 0.3 * inch))
+
+    add_section("Morning", morning)
+    add_section("Afternoon", afternoon)
+    add_section("Night", night)
+
+    doc.build(elements)
+
+    return send_file("pill_schedule.pdf", as_attachment=True)
+    
 # ---------------- RUN ----------------
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=5000)
+
 
